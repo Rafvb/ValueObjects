@@ -1,0 +1,1 @@
+﻿C# records might seem like a good fit, but have [some problems](https://enterprisecraftsmanship.com/posts/csharp-records-value-objects/) when used as Value Types.

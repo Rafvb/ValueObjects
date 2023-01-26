@@ -1,0 +1,1 @@
+﻿We use a variation of the base class described [here](https://enterprisecraftsmanship.com/posts/value-object-better-implementation/) when used as Value Types.
