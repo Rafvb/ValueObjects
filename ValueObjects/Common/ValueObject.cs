@@ -1,15 +1,19 @@
 ﻿namespace ValueObjects.Common
 {
+    /// <summary>
+    /// Variant of https://enterprisecraftsmanship.com/posts/value-object-better-implementation/.
+    /// Can also be found in the https://github.com/vkhorikov/CSharpFunctionalExtensions package.
+    /// </summary>
     public abstract class ValueObject
     {
         public static bool operator ==(ValueObject a, ValueObject b)
         {
-            if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
+            if (a is null && b is null)
             {
                 return true;
             }
 
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            if (a is null || b is null)
             {
                 return false;
             }
@@ -29,12 +33,7 @@
                 return false;
             }
 
-            if (GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return GetEqualityMembers().SequenceEqual(((ValueObject)obj).GetEqualityMembers());
+            return GetType() == obj.GetType() && GetEqualityMembers().SequenceEqual(((ValueObject)obj).GetEqualityMembers());
         }
 
         public override int GetHashCode()
