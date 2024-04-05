@@ -26,4 +26,14 @@ public sealed class AddressRecordTests
         address1.Equals(address2).Should().Be(expectedEqual);
         (address1 == address2).Should().Be(expectedEqual);
     }
+
+    [Fact]
+    public void Comparability_DoesNotWorkWithRecordTypes()
+    {
+        var address1 = new AddressRecord("Stationstraat", "3200");
+        var address2 = new AddressRecord("Bekaflaan", "3200");
+        var addresses = new[] { address1, address2 }.OrderBy(x => x).ToArray();
+
+        addresses[0].Should().Be(address2);
+    }
 }

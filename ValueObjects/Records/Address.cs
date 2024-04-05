@@ -4,7 +4,11 @@ namespace ValueObjects.Records;
 
 public sealed class Address : ValueObject
 {
-    public Address(string street, string zipCode)
+    public Address(string street, string zipCode) : this(street, zipCode, [])
+    {
+    }
+
+    public Address(string street, string zipCode, string[] comments)
     {
         if (string.IsNullOrEmpty(street))
         {
@@ -18,15 +22,24 @@ public sealed class Address : ValueObject
 
         Street = street;
         ZipCode = zipCode;
+
+        Comments = comments ?? throw new BusinessRuleException("Comments should not be null");
     }
 
     public string Street { get; }
 
     public string ZipCode { get; }
 
-    protected override IEnumerable<object> GetEqualityMembers()
+    public string[] Comments { get; }
+
+    protected override IEnumerable<IComparable> GetEqualityComponents()
     {
         yield return Street;
         yield return ZipCode;
+
+        foreach (var comment in Comments.OrderBy(c => c))
+        {
+            yield return comment;
+        }
     }
 }

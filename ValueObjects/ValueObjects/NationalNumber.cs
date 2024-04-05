@@ -45,7 +45,7 @@ public sealed class NationalNumber : ValueObject
         return this == Empty ? "National number empty" : $"{Value[..2]}.{Value[2..4]}.{Value[4..6]}-{Value[6..9]}.{Value[9..11]}";
     }
 
-    protected override IEnumerable<object> GetEqualityMembers()
+    protected override IEnumerable<IComparable> GetEqualityComponents()
     {
         yield return Value;
     }

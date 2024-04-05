@@ -28,7 +28,7 @@ public sealed class Birthdate : ValueObject
         return this == Unknown ? "Birthdate unknown" : Date.ToString("dd/MM/yyyy");
     }
 
-    protected override IEnumerable<object> GetEqualityMembers()
+    protected override IEnumerable<IComparable> GetEqualityComponents()
     {
         yield return Date;
     }

@@ -1,52 +1,100 @@
-﻿namespace ValueObjects.Common
+﻿namespace ValueObjects.Common;
+
+/// <summary>
+/// Variant of https://enterprisecraftsmanship.com/posts/value-object-better-implementation/.
+/// Can also be found in the https://github.com/vkhorikov/CSharpFunctionalExtensions package.
+/// </summary>
+[Serializable]
+public abstract class ValueObject : IComparable, IComparable<ValueObject>
 {
-    /// <summary>
-    /// Variant of https://enterprisecraftsmanship.com/posts/value-object-better-implementation/.
-    /// Can also be found in the https://github.com/vkhorikov/CSharpFunctionalExtensions package.
-    /// </summary>
-    public abstract class ValueObject
+    private int? _cachedHashCode;
+
+    protected abstract IEnumerable<IComparable> GetEqualityComponents();
+
+    public override bool Equals(object obj)
     {
-        public static bool operator ==(ValueObject a, ValueObject b)
+        if (obj == null)
+            return false;
+
+        if (GetUnproxiedType(this) != GetUnproxiedType(obj))
+            return false;
+
+        var valueObject = (ValueObject)obj;
+
+        return GetEqualityComponents().SequenceEqual(valueObject.GetEqualityComponents());
+    }
+
+    public override int GetHashCode()
+    {
+        if (!_cachedHashCode.HasValue)
         {
-            if (a is null && b is null)
-            {
-                return true;
-            }
-
-            if (a is null || b is null)
-            {
-                return false;
-            }
-
-            return a.Equals(b);
-        }
-
-        public static bool operator !=(ValueObject a, ValueObject b)
-        {
-            return !(a == b);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            return GetType() == obj.GetType() && GetEqualityMembers().SequenceEqual(((ValueObject)obj).GetEqualityMembers());
-        }
-
-        public override int GetHashCode()
-        {
-            return GetEqualityMembers().Aggregate(1, (current, obj) =>
-            {
-                unchecked
+            _cachedHashCode = GetEqualityComponents()
+                .Aggregate(1, (current, obj) =>
                 {
-                    return (current * 23) + (obj?.GetHashCode() ?? 0);
-                }
-            });
+                    unchecked
+                    {
+                        return current * 23 + (obj?.GetHashCode() ?? 0);
+                    }
+                });
         }
 
-        protected abstract IEnumerable<object> GetEqualityMembers();
+        return _cachedHashCode.Value;
+    }
+
+
+    public virtual int CompareTo(ValueObject other)
+    {
+        if (other is null)
+            return 1;
+
+        if (ReferenceEquals(this, other))
+            return 0;
+
+        Type thisType = GetUnproxiedType(this);
+        Type otherType = GetUnproxiedType(other);
+        if (thisType != otherType)
+            return string.Compare($"{thisType}", $"{otherType}", StringComparison.Ordinal);
+
+        return
+            GetEqualityComponents().Zip(
+                    other.GetEqualityComponents(),
+                    (left, right) =>
+                        left?.CompareTo(right) ?? (right is null ? 0 : -1))
+                .FirstOrDefault(cmp => cmp != 0);
+    }
+
+    public virtual int CompareTo(object other)
+    {
+        return CompareTo(other as ValueObject);
+    }
+
+    public static bool operator ==(ValueObject a, ValueObject b)
+    {
+        if (a is null && b is null)
+            return true;
+
+        if (a is null || b is null)
+            return false;
+
+        return a.Equals(b);
+    }
+
+    public static bool operator !=(ValueObject a, ValueObject b)
+    {
+        return !(a == b);
+    }
+
+    internal static Type GetUnproxiedType(object obj)
+    {
+        const string EFCoreProxyPrefix = "Castle.Proxies.";
+        const string NHibernateProxyPostfix = "Proxy";
+
+        Type type = obj.GetType();
+        string typeString = type.ToString();
+
+        if (typeString.Contains(EFCoreProxyPrefix) || typeString.EndsWith(NHibernateProxyPostfix))
+            return type.BaseType;
+
+        return type;
     }
 }

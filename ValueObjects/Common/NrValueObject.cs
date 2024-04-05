@@ -30,7 +30,7 @@ public abstract class NrValueObject : ValueObject
         return $"{Nr}";
     }
 
-    protected override IEnumerable<object> GetEqualityMembers()
+    protected override IEnumerable<IComparable> GetEqualityComponents()
     {
         yield return Nr;
     }

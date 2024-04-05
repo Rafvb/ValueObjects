@@ -29,7 +29,7 @@ public sealed class ChildName : ValueObject
         return $"{Lastname} {Firstname}";
     }
 
-    protected override IEnumerable<object> GetEqualityMembers()
+    protected override IEnumerable<IComparable> GetEqualityComponents()
     {
         yield return Lastname;
         yield return Firstname;
