@@ -13,6 +13,10 @@ public sealed class AddressTests
 
         address.Street.Should().Be("Bekaflaan");
         address.ZipCode.Should().Be("3200");
+        address.Comments.Should().BeEmpty();
+
+        // Immutable:
+        // address.Street = "Stationstraat";
     }
 
     [Theory]
@@ -35,6 +39,14 @@ public sealed class AddressTests
             .WithMessage("ZipCode should not be empty");
     }
 
+    [Fact]
+    public void Create_WitCommentsNull_ThrowsBusinessRuleException()
+    {
+        FluentActions.Invoking(() => new Address("Bekaflaan", "3200", null))
+            .Should().Throw<BusinessRuleException>()
+            .WithMessage("Comments should not be null");
+    }
+
     [Theory]
     [InlineData("Bekaflaan", "3200", true)]
     [InlineData("Stationstraat", "3200", false)]
@@ -53,6 +65,7 @@ public sealed class AddressTests
     {
         var address1 = new Address("Stationstraat", "3200");
         var address2 = new Address("Bekaflaan", "3200");
+
         var addresses = new[] { address1, address2 }.OrderBy(x => x).ToArray();
 
         addresses[0].Should().Be(address2);
