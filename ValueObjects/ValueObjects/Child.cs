@@ -4,24 +4,24 @@ namespace ValueObjects.ValueObjects;
 
 public sealed class Child
 {
-    public Child(ChildNr nr, CustomerNr customerNr, ChildName name, Birthdate birthdate, NationalNumber nationalNumber)
+    public Child(ChildId id, CustomerId customerId, ChildName name, Birthdate birthdate, NationalNumber nationalNumber)
     {
-        Nr = nr ?? throw new BusinessRuleException("ChildNr should not be empty");
+        Id = id ?? throw new BusinessRuleException("ChildId should not be empty");
 
-        if (customerNr == null || customerNr.IsEmpty)
+        if (customerId == null || customerId.IsEmpty)
         {
-            throw new BusinessRuleException("CustomerNr should not be empty");
+            throw new BusinessRuleException("CustomerId should not be empty");
         }
 
-        CustomerNr = customerNr;
+        CustomerId = customerId;
 
         ChangeName(name);
         ChangeBirthdate(birthdate);
         ChangeNationalNumber(nationalNumber);
     }
 
-    public ChildNr Nr { get; }
-    public CustomerNr CustomerNr { get; }
+    public ChildId Id { get; }
+    public CustomerId CustomerId { get; }
 
     public ChildName Name { get; private set; }
     public Birthdate Birthdate { get; private set; }

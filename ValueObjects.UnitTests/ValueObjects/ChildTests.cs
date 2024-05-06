@@ -10,49 +10,49 @@ public sealed class ChildTests
     public void Create_CreatesValidChild()
     {
         var child = new Child(
-            new ChildNr(5),
-            new CustomerNr(456),
+            new ChildId(5),
+            new CustomerId(456),
             new ChildName("Van Baelen", "Raf"),
             new Birthdate(new DateOnly(2021, 1, 1)),
             new NationalNumber("21010101346"));
 
-        child.Nr.Should().Be(new ChildNr(5));
-        child.CustomerNr.Should().Be(new CustomerNr(456));
+        child.Id.Should().Be(new ChildId(5));
+        child.CustomerId.Should().Be(new CustomerId(456));
         child.Name.Should().Be(new ChildName("Van Baelen", "Raf"));
         child.Birthdate.Should().Be(new Birthdate(new DateOnly(2021, 1, 1)));
         child.NationalNumber.Should().Be(new NationalNumber("21010101346"));
     }
     
     [Fact]
-    public void Create_WithoutNr_ThrowsBusinessRuleException()
+    public void Create_WithoutId_ThrowsBusinessRuleException()
     {
-        FluentActions.Invoking(() => new ChildBuilder().WithNr(null).Build())
+        FluentActions.Invoking(() => new ChildBuilder().WithId(null).Build())
             .Should().Throw<BusinessRuleException>()
-            .WithMessage("ChildNr should not be empty");
+            .WithMessage("ChildId should not be empty");
     }
     
     [Fact]
-    public void Create_ChildNrEmpty_CreatesChild()
+    public void Create_ChildIdEmpty_CreatesChild()
     {
-        var child = new ChildBuilder().WithNr(ChildNr.Empty).Build();
+        var child = new ChildBuilder().WithId(ChildId.Empty).Build();
 
-        child.Nr.Should().Be(ChildNr.Empty);
+        child.Id.Should().Be(ChildId.Empty);
     }
 
     [Fact]
-    public void Create_WithoutCustomerNr_ThrowsBusinessRuleException()
+    public void Create_WithoutCustomerId_ThrowsBusinessRuleException()
     {
-        FluentActions.Invoking(() => new ChildBuilder().WithCustomerNr(null).Build())
+        FluentActions.Invoking(() => new ChildBuilder().WithCustomerId(null).Build())
             .Should().Throw<BusinessRuleException>()
-            .WithMessage("CustomerNr should not be empty");
+            .WithMessage("CustomerId should not be empty");
     }
 
     [Fact]
-    public void Create_WithCustomerNrEmpty_ThrowsBusinessRuleException()
+    public void Create_WithCustomerIdEmpty_ThrowsBusinessRuleException()
     {
-        FluentActions.Invoking(() => new ChildBuilder().WithCustomerNr(CustomerNr.Empty).Build())
+        FluentActions.Invoking(() => new ChildBuilder().WithCustomerId(CustomerId.Empty).Build())
             .Should().Throw<BusinessRuleException>()
-            .WithMessage("CustomerNr should not be empty");
+            .WithMessage("CustomerId should not be empty");
     }
 
     [Fact]

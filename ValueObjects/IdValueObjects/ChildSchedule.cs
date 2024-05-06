@@ -1,4 +1,4 @@
-﻿namespace ValueObjects.NrValueObjects;
+﻿namespace ValueObjects.IdValueObjects;
 
 public sealed class ChildSchedule
 {

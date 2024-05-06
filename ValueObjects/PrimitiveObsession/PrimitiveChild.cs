@@ -2,9 +2,9 @@
 
 public sealed class PrimitiveChild
 {
-    public long Nr { get; set; }
+    public long Id { get; set; }
 
-    public long CustomerNr { get; set; }
+    public long CustomerId { get; set; }
 
     public string Firstname { get; set; }
     public string Lastname { get; set; }

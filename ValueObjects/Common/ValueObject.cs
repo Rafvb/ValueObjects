@@ -41,7 +41,6 @@ public abstract class ValueObject : IComparable, IComparable<ValueObject>
         return _cachedHashCode.Value;
     }
 
-
     public virtual int CompareTo(ValueObject other)
     {
         if (other is null)

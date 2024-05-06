@@ -4,23 +4,23 @@ namespace ValueObjects.UnitTests.ValueObjects;
 
 public sealed class ChildBuilder
 {
-    private ChildNr _nr = new(1);
-    private CustomerNr _customerNr = new(123);
+    private ChildId _id = new(1);
+    private CustomerId _customerId = new(123);
 
     private ChildName _name = new("Last name", "First name");
     private Birthdate _birthdate = new(new DateOnly(2022, 7, 15));
 
     private NationalNumber _nationalNumber = new("22071501377");
 
-    public ChildBuilder WithNr(ChildNr nr)
+    public ChildBuilder WithId(ChildId id)
     {
-        _nr = nr;
+        _id = id;
         return this;
     }
 
-    public ChildBuilder WithCustomerNr(CustomerNr customerNr)
+    public ChildBuilder WithCustomerId(CustomerId customerId)
     {
-        _customerNr = customerNr;
+        _customerId = customerId;
         return this;
     }
 
@@ -45,8 +45,8 @@ public sealed class ChildBuilder
     public Child Build()
     {
         return new Child(
-            _nr,
-            _customerNr,
+            _id,
+            _customerId,
             _name,
             _birthdate,
             _nationalNumber

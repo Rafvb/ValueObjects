@@ -1,37 +1,37 @@
 ﻿namespace ValueObjects.Common;
 
-public abstract class NrValueObject : ValueObject
+public abstract class IdValueObject : ValueObject
 {
-    protected NrValueObject()
+    protected IdValueObject()
     {
-        Nr = 0;
+        Id = 0;
         IsEmpty = true;
     }
 
-    protected NrValueObject(long nr)
+    protected IdValueObject(long id)
     {
-        if (nr <= 0)
+        if (id <= 0)
         {
             throw new BusinessRuleException($"{GetType().Name} must be greater than 0");
         }
 
-        Nr = nr;
+        Id = id;
         IsEmpty = false;
     }
 
-    public long Nr { get; }
+    public long Id { get; }
 
     public bool IsEmpty { get; }
 
-    public static implicit operator long(NrValueObject nrValueObject) => nrValueObject.Nr;
+    public static implicit operator long(IdValueObject idValueObject) => idValueObject.Id;
 
     public override string ToString()
     {
-        return $"{Nr}";
+        return $"{Id}";
     }
 
     protected override IEnumerable<IComparable> GetEqualityComponents()
     {
-        yield return Nr;
+        yield return Id;
     }
 }
