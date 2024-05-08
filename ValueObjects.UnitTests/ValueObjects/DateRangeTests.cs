@@ -87,19 +87,19 @@ public sealed class DateRangeTests
 
     [Theory]
     [MemberData(nameof(ValidInputData))]
-    public void Create_WithValidInput_CreatesDateRange(DateTime from, DateTime till)
+    public void Create_WithValidInput_CreatesDateRange(DateTime from, DateTime to)
     {
-        var dateRange = new DateRange(from, till);
+        var dateRange = new DateRange(from, to);
 
         dateRange.From.Should().Be(from);
-        dateRange.Till.Should().Be(till);
+        dateRange.To.Should().Be(to);
     }
 
     [Theory]
     [MemberData(nameof(InvalidInputData))]
-    public void Create_WithInvalidInput_ThrowsBusinessRuleException(DateTime from, DateTime till)
+    public void Create_WithInvalidInput_ThrowsBusinessRuleException(DateTime from, DateTime to)
     {
-        FluentActions.Invoking(() => new DateRange(from, till))
+        FluentActions.Invoking(() => new DateRange(from, to))
             .Should()
             .Throw<BusinessRuleException>()
             .WithMessage("From should be same as or before Till");
@@ -109,11 +109,11 @@ public sealed class DateRangeTests
     [MemberData(nameof(OverlapsWithData))]
     public void OverlapsWith_ReturnsTrueIfOverlap(
         DateTime from,
-        DateTime till,
+        DateTime to,
         DateRange otherDateRange,
         bool overlap)
     {
-        new DateRange(from, till).OverlapsWith(otherDateRange).Should().Be(overlap);
+        new DateRange(from, to).OverlapsWith(otherDateRange).Should().Be(overlap);
     }
 
     [Fact]
@@ -143,9 +143,9 @@ public sealed class DateRangeTests
 
     [Theory]
     [MemberData(nameof(DurationData))]
-    public void Duration_ReturnsCorrectNumberOfHoursInDateRange(DateTime from, DateTime till, TimeSpan expectedDuration)
+    public void Duration_ReturnsCorrectNumberOfHoursInDateRange(DateTime from, DateTime to, TimeSpan expectedDuration)
     {
-        new DateRange(from, till).Duration.Should().Be(expectedDuration);
+        new DateRange(from, to).Duration.Should().Be(expectedDuration);
     }
 
     [Theory]
@@ -159,6 +159,6 @@ public sealed class DateRangeTests
         var result = dateRange.Extend(TimeSpan.FromDays(daysToExtend));
 
         result.From.Should().Be(dateRange.From);
-        result.Till.Should().Be(dateRange.Till + daysToExtend.Days());
+        result.To.Should().Be(dateRange.To + daysToExtend.Days());
     }
 }

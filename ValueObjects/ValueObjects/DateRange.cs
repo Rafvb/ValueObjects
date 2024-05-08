@@ -4,22 +4,22 @@ namespace ValueObjects.ValueObjects;
 
 public sealed class DateRange : ValueObject
 {
-    public DateRange(DateTime from, DateTime till)
+    public DateRange(DateTime from, DateTime to)
     {
-        if (from > till)
+        if (from > to)
         {
             throw new BusinessRuleException("From should be same as or before Till");
         }
 
         From = from;
-        Till = till;
+        To = to;
 
-        Duration = Till - From;
+        Duration = To - From;
     }
 
     public DateTime From { get; }
 
-    public DateTime Till { get; }
+    public DateTime To { get; }
 
     public TimeSpan Duration { get; }
 
@@ -30,22 +30,22 @@ public sealed class DateRange : ValueObject
             throw new BusinessRuleException("Other DateRange should not be null");
         }
 
-        return From < otherDateRange.Till && otherDateRange.From < Till;
+        return From < otherDateRange.To && otherDateRange.From < To;
     }
 
     public bool Contains(DateTime date)
     {
-        return From <= date && date <= Till;
+        return From <= date && date <= To;
     }
 
     public DateRange Extend(TimeSpan value)
     {
-        return new DateRange(From, Till.Add(value));
+        return new DateRange(From, To.Add(value));
     }
 
     protected override IEnumerable<IComparable> GetEqualityComponents()
     {
         yield return From;
-        yield return Till;
+        yield return To;
     }
 }
